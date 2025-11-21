@@ -15,6 +15,7 @@ const statusIcons: { [key: string]: React.ReactNode } = {
   'Arrived at Hub': <WarehouseIcon />,
   'Shipment Picked Up': <PackageCheckIcon />,
   'Order Created': <ClipboardIcon />,
+  'On Hold': <AlertIcon />,
 };
 
 export default function TrackingResult({ data }: TrackingResultProps) {
@@ -40,6 +41,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
 
   const deliveryInfo = getDeliveryInfo(data.estimatedDelivery);
   const hasShipmentDetails = data.weight || data.dimensions || data.pieceCount || data.shipmentType;
+  const isDelivered = data.currentStatus === 'Delivered';
 
   return (
     <div className="w-full text-left">
@@ -69,16 +71,19 @@ export default function TrackingResult({ data }: TrackingResultProps) {
         <div className="bg-black/20 p-4 rounded-xl border border-blue-500/20 flex flex-col justify-between">
           <div>
              <p className="text-sm text-blue-300">Current Status</p>
-             <p className="font-bold text-cyan-400 text-lg">{data.currentStatus}</p>
+             <div className={`font-bold text-lg flex items-center gap-2 ${data.currentStatus === 'On Hold' ? 'text-yellow-400' : 'text-cyan-400'}`}>
+                 {data.currentStatus === 'On Hold' && <span className="animate-pulse">⚠️</span>}
+                 {data.currentStatus}
+             </div>
           </div>
         </div>
 
         <div className="bg-black/20 p-4 rounded-xl border border-blue-500/20 flex flex-col justify-between">
           <div>
-              <p className="text-sm text-blue-300 mb-1">Estimated Delivery</p>
+              <p className="text-sm text-blue-300 mb-1">{isDelivered ? 'Delivered On' : 'Estimated Delivery'}</p>
               <p className="font-bold text-white text-xl">{data.estimatedDelivery}</p>
           </div>
-          {deliveryInfo && (
+          {deliveryInfo && !isDelivered && (
               <div className="mt-3 flex items-center gap-3 bg-white/5 p-2 rounded-lg border border-white/5">
                   <div className="text-blue-400 bg-blue-500/10 p-1.5 rounded-md">
                      <ClockIcon />
@@ -86,7 +91,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
                   <div className="flex flex-col">
                        <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider leading-tight">Time Window</span>
                        <span className="text-sm font-bold text-blue-100">
-                           {deliveryInfo.day ? `${deliveryInfo.day}, ` : ''}{deliveryInfo.timeWindow}
+                           {deliveryInfo.day ? `${deliveryInfo.day}, ` : ''}09:00 AM - 06:00 PM
                        </span>
                   </div>
               </div>
@@ -167,11 +172,11 @@ interface TrackingEventItemProps {
 
 const TrackingEventItem: React.FC<TrackingEventItemProps> = ({ event, isFirst }) => (
   <div className="relative pl-8 pb-4 border-l border-gray-700 last:border-0">
-    <div className={`absolute -left-[17px] top-0 h-9 w-9 rounded-full flex items-center justify-center border-4 border-gray-900 ${isFirst ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+    <div className={`absolute -left-[17px] top-0 h-9 w-9 rounded-full flex items-center justify-center border-4 border-gray-900 ${isFirst ? event.status === 'On Hold' ? 'bg-yellow-600 text-white' : 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
         {statusIcons[event.status] || <PackageIcon/>}
     </div>
     <div>
-      <p className={`font-bold text-lg ${isFirst ? 'text-blue-400' : 'text-gray-300'}`}>{event.status}</p>
+      <p className={`font-bold text-lg ${isFirst ? event.status === 'On Hold' ? 'text-yellow-400' : 'text-blue-400' : 'text-gray-300'}`}>{event.status}</p>
       <p className="text-sm text-gray-400">{event.location}</p>
       <p className="text-xs text-gray-500 mb-1">{event.timestamp}</p>
       <p className="text-sm text-gray-300 bg-white/5 p-2 rounded-lg inline-block border border-white/5">{event.details}</p>
@@ -189,6 +194,7 @@ function PlaneDepartIcon() { return <svg xmlns="http://www.w3.org/2000/svg" widt
 function PackageCheckIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16.4 9.5a2 2 0 1 1-2.9 2.9"/><path d="m21 16-4-4-1.5 1.5"/><path d="M12 2v4"/><path d="M18.37 7.63.5 15.5l-3 3.01h.01"/><path d="m7.63 18.37-4-4"/><path d="M2 12h4"/><path d="m4.22 19.78 3-3"/><path d="M15.5 21.5 12 18l-1.5 1.5"/><path d="M12 22v-4"/></svg>; }
 function ClipboardIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>; }
 function PackageIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v2"/><path d="M12 12 3.1 7.5"/><path d="M12 12 20.9 7.5"/><path d="M12 22V12"/><path d="M18.7 14.3 12 18l-6.7-3.7"/><path d="M3.1 16.5 12 22l8.9-5.5"/></svg>; }
+function AlertIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>; }
 function CopyIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>; }
 function CheckIconSmall() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><polyline points="20 6 9 17 4 12"></polyline></svg>; }
 function ClockIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>; }

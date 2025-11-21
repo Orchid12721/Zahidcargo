@@ -6,7 +6,7 @@ interface FooterProps {
 }
 
 export default function Footer({ onLogin }: FooterProps) {
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
 
@@ -19,7 +19,7 @@ export default function Footer({ onLogin }: FooterProps) {
         alert('Access Granted! Welcome back, Admin.');
       }
       // Reset state after successful login
-      setShowLogin(false);
+      setShowLoginModal(false);
       setPassword('');
       setError(false);
     } else {
@@ -29,57 +29,102 @@ export default function Footer({ onLogin }: FooterProps) {
   };
 
   return (
-    <footer>
-        <div className="footer-content">
-            <div className="footer-brand">
-                <h2>Orchid Malaysia</h2>
-            </div>
-            <p className="footer-text">
-                © {new Date().getFullYear()} Orchid Malaysia. Premium global shipping services for your precious parcels.
-            </p>
-            
-            {showLogin ? (
-                <form onSubmit={handleLogin} className="flex flex-col items-center gap-3 mt-2 animate-[fadeIn_0.3s_ease-out]">
-                    <div className="relative">
-                        <input 
-                            type="password" 
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                setError(false);
-                            }}
-                            placeholder="Enter Admin Password"
-                            className={`px-4 py-2 rounded-lg bg-gray-900/80 border-2 ${error ? 'border-red-500 text-red-200' : 'border-blue-500/50 text-white'} focus:outline-none focus:border-blue-500 transition-all w-64 text-center placeholder-gray-500 font-mono text-sm shadow-lg`}
-                            autoFocus
-                        />
-                        {error && <span className="absolute -bottom-6 left-0 right-0 text-center text-xs text-red-400 font-bold">Incorrect Password</span>}
-                    </div>
-                    <div className="flex gap-2 mt-1">
-                        <button 
-                            type="submit" 
-                            className="px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg font-bold text-sm transition-all shadow-md hover:shadow-blue-500/25 active:scale-95"
-                        >
-                            Login
-                        </button>
-                        <button 
-                            type="button" 
-                            onClick={() => {
-                                setShowLogin(false);
-                                setPassword('');
-                                setError(false);
-                            }}
-                            className="px-4 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg font-semibold text-sm transition-all active:scale-95"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            ) : (
-                <button className="admin-button" onClick={() => setShowLogin(true)}>
-                    <span>Admin Team Access</span>
-                </button>
-            )}
-        </div>
-    </footer>
+    <>
+      <footer>
+          <div className="footer-content">
+              <div className="footer-brand">
+                  <h2>Orchid Malaysia</h2>
+              </div>
+              <p className="footer-text">
+                  © {new Date().getFullYear()} Orchid Malaysia. Premium global shipping services for your precious parcels.
+              </p>
+          </div>
+      </footer>
+
+      {/* Discreet Admin Access Button (Fixed Bottom Left) */}
+      <button 
+          onClick={() => setShowLoginModal(true)}
+          className="fixed bottom-4 left-4 z-40 p-2 text-blue-900/30 hover:text-blue-500 transition-colors duration-300 active:scale-95"
+          title="Admin Access"
+          aria-label="Admin Login"
+      >
+          <LockIcon />
+      </button>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-[fadeIn_0.2s_ease-out]">
+              <div 
+                  className="bg-gray-900 border border-blue-500/30 rounded-2xl p-8 max-w-sm w-full shadow-2xl shadow-blue-900/20 relative overflow-hidden"
+                  onClick={(e) => e.stopPropagation()}
+              >
+                   {/* Close Button */}
+                   <button 
+                      onClick={() => setShowLoginModal(false)}
+                      className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+                   >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                   </button>
+
+                   <div className="text-center mb-6">
+                       <div className="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-3 text-blue-400">
+                           <LockIconLarge />
+                       </div>
+                       <h3 className="text-xl font-bold text-white">Admin Verification</h3>
+                       <p className="text-sm text-gray-400">Enter secure password to continue</p>
+                   </div>
+
+                   <form onSubmit={handleLogin} className="space-y-4">
+                      <div className="relative">
+                          <input 
+                              type="password" 
+                              value={password}
+                              onChange={(e) => {
+                                  setPassword(e.target.value);
+                                  setError(false);
+                              }}
+                              placeholder="Password"
+                              className={`w-full px-4 py-3 rounded-xl bg-black/50 border-2 ${error ? 'border-red-500 text-red-200' : 'border-blue-500/30 text-white'} focus:outline-none focus:border-blue-500 transition-all text-center placeholder-gray-600 font-mono tracking-widest shadow-inner`}
+                              autoFocus
+                          />
+                      </div>
+                      
+                      {error && (
+                          <p className="text-xs text-red-400 font-bold text-center animate-pulse">
+                              Access Denied: Incorrect Password
+                          </p>
+                      )}
+
+                      <button 
+                          type="submit" 
+                          className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-all active:scale-95"
+                      >
+                          Access Dashboard
+                      </button>
+                   </form>
+              </div>
+          </div>
+      )}
+    </>
   );
+}
+
+function LockIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+    );
+}
+
+function LockIconLarge() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            <path d="M12 15v2"></path>
+            <circle cx="12" cy="16" r="1"></circle>
+        </svg>
+    );
 }
