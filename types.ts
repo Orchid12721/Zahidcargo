@@ -19,8 +19,3 @@ export interface TrackingData {
   pieceCount?: number;
   shipmentType?: string;
 }
-
-export interface ChatMessage {
-  role: 'user' | 'model';
-  text: string;
-}

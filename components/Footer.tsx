@@ -49,7 +49,7 @@ export default function Footer({ onLogin }: FooterProps) {
                                 setError(false);
                             }}
                             placeholder="Enter Admin Password"
-                            className={`px-4 py-2 rounded-lg bg-gray-900/80 border-2 ${error ? 'border-red-500 text-red-200' : 'border-green-500/50 text-white'} focus:outline-none focus:border-green-500 transition-all w-64 text-center placeholder-gray-500 font-mono text-sm shadow-lg`}
+                            className={`px-4 py-2 rounded-lg bg-gray-900/80 border-2 ${error ? 'border-red-500 text-red-200' : 'border-blue-500/50 text-white'} focus:outline-none focus:border-blue-500 transition-all w-64 text-center placeholder-gray-500 font-mono text-sm shadow-lg`}
                             autoFocus
                         />
                         {error && <span className="absolute -bottom-6 left-0 right-0 text-center text-xs text-red-400 font-bold">Incorrect Password</span>}
@@ -57,7 +57,7 @@ export default function Footer({ onLogin }: FooterProps) {
                     <div className="flex gap-2 mt-1">
                         <button 
                             type="submit" 
-                            className="px-4 py-1.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg font-bold text-sm transition-all shadow-md hover:shadow-green-500/25 active:scale-95"
+                            className="px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg font-bold text-sm transition-all shadow-md hover:shadow-blue-500/25 active:scale-95"
                         >
                             Login
                         </button>

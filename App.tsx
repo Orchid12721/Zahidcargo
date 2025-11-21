@@ -20,11 +20,68 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
-  // If Admin logs in, fetch all shipments to populate the dashboard
+  // Real-time Subscription for Admin Dashboard and Live Tracking
   useEffect(() => {
+    // 1. Fetch initial data if Admin
     if (isAdminLoggedIn) {
       fetchAllShipments();
     }
+
+    // 2. Subscribe to changes
+    // This allows real-time updates for both Admin (list view) and Users (single tracking view)
+    const channel = supabase
+      .channel('realtime:shipments')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'shipments' },
+        (payload) => {
+          console.log('Real-time update received:', payload);
+          
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            const newRecord = payload.new as { tracking_number: string, data: TrackingData };
+            
+            // Update Admin List
+            if (isAdminLoggedIn) {
+                setShipments(prev => ({
+                    ...prev,
+                    [newRecord.tracking_number]: newRecord.data
+                }));
+            }
+
+            // Update Public User View if they are currently looking at this specific ID
+            setTrackingData(prev => {
+                if (prev && prev.trackingNumber === newRecord.tracking_number) {
+                    return newRecord.data;
+                }
+                return prev;
+            });
+          } else if (payload.eventType === 'DELETE') {
+            const deletedRecord = payload.old as { tracking_number: string };
+            
+            // Remove from Admin List
+             if (isAdminLoggedIn) {
+                setShipments(prev => {
+                    const newState = { ...prev };
+                    delete newState[deletedRecord.tracking_number];
+                    return newState;
+                });
+            }
+
+            // Clear Public User View if they are looking at the deleted ID
+            setTrackingData(prev => {
+                if (prev && prev.trackingNumber === deletedRecord.tracking_number) {
+                    return null;
+                }
+                return prev;
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [isAdminLoggedIn]);
 
   const fetchAllShipments = async () => {
@@ -92,12 +149,7 @@ export default function App() {
         alert('Error creating shipment: ' + error.message);
         return;
       }
-
-      // Update local state for Admin Dashboard
-      setShipments(prev => ({
-        ...prev,
-        [newShipment.trackingNumber]: newShipment
-      }));
+      // No need to manually setShipments here, the Realtime subscription will catch it
     } catch (err) {
       console.error('Error creating shipment:', err);
       alert('Failed to create shipment.');
@@ -105,7 +157,8 @@ export default function App() {
   };
 
   const handleUpdateShipment = async (trackingNumber: string, event: TrackingEvent) => {
-    // Optimistically update local state first
+    // Optimistically update local state is handled by Realtime, but we need to fetch current first to append history
+    // or we can just use the 'shipments' state we already have.
     const currentShipment = shipments[trackingNumber];
     if (!currentShipment) return;
 
@@ -125,15 +178,29 @@ export default function App() {
         alert('Error updating shipment: ' + error.message);
         return;
       }
-
-      setShipments(prev => ({
-        ...prev,
-        [trackingNumber]: updatedShipment
-      }));
+      // Realtime subscription will handle the UI update
       
     } catch (err) {
       console.error('Error updating shipment:', err);
       alert('Failed to update shipment.');
+    }
+  };
+
+  const handleDeleteShipment = async (trackingNumber: string) => {
+    try {
+      const { error } = await supabase
+        .from('shipments')
+        .delete()
+        .eq('tracking_number', trackingNumber);
+
+      if (error) {
+        alert('Error deleting shipment: ' + error.message);
+      } else {
+        // Success is handled via realtime subscription
+      }
+    } catch (err) {
+      console.error('Error deleting shipment:', err);
+      alert('Failed to delete shipment.');
     }
   };
 
@@ -146,6 +213,7 @@ export default function App() {
             shipments={shipments}
             onCreateShipment={handleCreateShipment}
             onUpdateShipment={handleUpdateShipment}
+            onDeleteShipment={handleDeleteShipment}
             onLogout={() => setIsAdminLoggedIn(false)}
           />
         )}
@@ -157,7 +225,7 @@ export default function App() {
                 <p>Premium door-to-door delivery service across the globe. Your precious parcels, delivered with care and precision.</p>
                 <div className="badges">
                     <div className="badge">
-                        <div className="badge-dot green"></div>
+                        <div className="badge-dot blue"></div>
                         <span>Real-time Tracking</span>
                     </div>
                     <div className="badge">
@@ -165,7 +233,7 @@ export default function App() {
                         <span>Global Coverage</span>
                     </div>
                     <div className="badge">
-                        <div className="badge-dot teal"></div>
+                        <div className="badge-dot cyan"></div>
                         <span>24/7 Support</span>
                     </div>
                 </div>
@@ -203,7 +271,7 @@ export default function App() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             <p>Your package tracking information will appear here</p>
-                            <p className="text-sm text-green-300/50 mt-3">Enter a tracking ID above to get started</p>
+                            <p className="text-sm text-blue-300/50 mt-3">Enter a tracking ID above to get started</p>
                         </>
                     )}
                 </div>
@@ -238,7 +306,7 @@ export default function App() {
                     <div className="process-card">
                         <div className="process-number">3</div>
                         <div className="process-image-container">
-                            <img src="https://images.unsplash.com/photo-1617704548623-340376564e68?q=80&w=2070&auto=format&fit=crop" alt="Door-to-Door Delivery" className="process-image" />
+                            <img src="https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=80&w=2000&auto=format&fit=crop" alt="Door-to-Door Delivery" className="process-image" />
                         </div>
                         <h3>Door-to-Door Delivery</h3>
                         <p>Our professional couriers ensure safe delivery right to your doorstep with a smile</p>

@@ -45,7 +45,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
     <div className="w-full text-left">
       <div className="flex flex-col md:flex-row items-center justify-center md:justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
-            <h3 className="text-2xl font-bold text-white">Tracking ID: <span className="text-purple-400">{data.trackingNumber}</span></h3>
+            <h3 className="text-2xl font-bold text-white">Tracking ID: <span className="text-blue-400">{data.trackingNumber}</span></h3>
             <button 
                 onClick={handleCopy}
                 className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-all active:scale-95 relative group"
@@ -53,7 +53,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
             >
                 {copied ? <CheckIconSmall /> : <CopyIcon />}
                 {copied && (
-                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-green-500 text-white text-xs font-bold rounded shadow-lg animate-fade-in-up">
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded shadow-lg animate-fade-in-up">
                         Copied!
                     </span>
                 )}
@@ -66,26 +66,26 @@ export default function TrackingResult({ data }: TrackingResultProps) {
       
       {/* Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-black/20 p-4 rounded-xl border border-purple-500/20 flex flex-col justify-between">
+        <div className="bg-black/20 p-4 rounded-xl border border-blue-500/20 flex flex-col justify-between">
           <div>
-             <p className="text-sm text-purple-300">Current Status</p>
-             <p className="font-bold text-green-400 text-lg">{data.currentStatus}</p>
+             <p className="text-sm text-blue-300">Current Status</p>
+             <p className="font-bold text-cyan-400 text-lg">{data.currentStatus}</p>
           </div>
         </div>
 
-        <div className="bg-black/20 p-4 rounded-xl border border-purple-500/20 flex flex-col justify-between">
+        <div className="bg-black/20 p-4 rounded-xl border border-blue-500/20 flex flex-col justify-between">
           <div>
-              <p className="text-sm text-purple-300 mb-1">Estimated Delivery</p>
+              <p className="text-sm text-blue-300 mb-1">Estimated Delivery</p>
               <p className="font-bold text-white text-xl">{data.estimatedDelivery}</p>
           </div>
           {deliveryInfo && (
               <div className="mt-3 flex items-center gap-3 bg-white/5 p-2 rounded-lg border border-white/5">
-                  <div className="text-purple-400 bg-purple-500/10 p-1.5 rounded-md">
+                  <div className="text-blue-400 bg-blue-500/10 p-1.5 rounded-md">
                      <ClockIcon />
                   </div>
                   <div className="flex flex-col">
                        <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider leading-tight">Time Window</span>
-                       <span className="text-sm font-bold text-purple-100">
+                       <span className="text-sm font-bold text-blue-100">
                            {deliveryInfo.day ? `${deliveryInfo.day}, ` : ''}{deliveryInfo.timeWindow}
                        </span>
                   </div>
@@ -93,9 +93,9 @@ export default function TrackingResult({ data }: TrackingResultProps) {
           )}
         </div>
 
-        <div className="bg-black/20 p-4 rounded-xl border border-purple-500/20 flex flex-col justify-between">
+        <div className="bg-black/20 p-4 rounded-xl border border-blue-500/20 flex flex-col justify-between">
             <div>
-                <p className="text-sm text-purple-300">Route</p>
+                <p className="text-sm text-blue-300">Route</p>
                 <div className="flex items-center gap-2 mt-1">
                     <span className="font-semibold text-white">{data.origin}</span>
                     <span className="text-gray-500">&rarr;</span>
@@ -108,11 +108,11 @@ export default function TrackingResult({ data }: TrackingResultProps) {
       {/* Shipment Details - Shown only if available */}
       {hasShipmentDetails && (
         <div className="bg-black/30 border border-gray-700 rounded-xl p-6 mb-8 backdrop-blur-sm">
-            <h4 className="text-purple-300 text-xs font-bold uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Shipment Details</h4>
+            <h4 className="text-blue-300 text-xs font-bold uppercase tracking-widest mb-4 border-b border-white/10 pb-2">Shipment Details</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                  {data.shipmentType && (
                      <div className="flex items-center gap-3">
-                         <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400"><BoxIcon /></div>
+                         <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400"><BoxIcon /></div>
                          <div>
                              <p className="text-[10px] text-gray-400 uppercase font-bold">Type</p>
                              <p className="text-white font-medium">{data.shipmentType}</p>
@@ -121,7 +121,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
                  )}
                  {data.weight && (
                      <div className="flex items-center gap-3">
-                         <div className="p-2 bg-green-500/10 rounded-lg text-green-400"><ScaleIcon /></div>
+                         <div className="p-2 bg-cyan-500/10 rounded-lg text-cyan-400"><ScaleIcon /></div>
                          <div>
                              <p className="text-[10px] text-gray-400 uppercase font-bold">Weight</p>
                              <p className="text-white font-medium">{data.weight} kg</p>
@@ -130,7 +130,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
                  )}
                  {data.pieceCount !== undefined && (
                      <div className="flex items-center gap-3">
-                         <div className="p-2 bg-yellow-500/10 rounded-lg text-yellow-400"><LayersIcon /></div>
+                         <div className="p-2 bg-sky-500/10 rounded-lg text-sky-400"><LayersIcon /></div>
                          <div>
                              <p className="text-[10px] text-gray-400 uppercase font-bold">Pieces</p>
                              <p className="text-white font-medium">{data.pieceCount}</p>
@@ -139,7 +139,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
                  )}
                  {data.dimensions && (
                      <div className="flex items-center gap-3">
-                         <div className="p-2 bg-red-500/10 rounded-lg text-red-400"><RulerIcon /></div>
+                         <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400"><RulerIcon /></div>
                          <div>
                              <p className="text-[10px] text-gray-400 uppercase font-bold">Dimensions</p>
                              <p className="text-white font-medium">{data.dimensions}</p>
@@ -150,7 +150,7 @@ export default function TrackingResult({ data }: TrackingResultProps) {
         </div>
       )}
 
-      <h4 className="text-xl font-bold text-white mb-6 pl-2 border-l-4 border-purple-500">Shipment History</h4>
+      <h4 className="text-xl font-bold text-white mb-6 pl-2 border-l-4 border-blue-500">Shipment History</h4>
       <div className="space-y-6 pl-2 md:pl-4">
         {data.history.map((event, index) => (
           <TrackingEventItem key={index} event={event} isFirst={index === 0} />
@@ -167,11 +167,11 @@ interface TrackingEventItemProps {
 
 const TrackingEventItem: React.FC<TrackingEventItemProps> = ({ event, isFirst }) => (
   <div className="relative pl-8 pb-4 border-l border-gray-700 last:border-0">
-    <div className={`absolute -left-[17px] top-0 h-9 w-9 rounded-full flex items-center justify-center border-4 border-gray-900 ${isFirst ? 'bg-purple-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
+    <div className={`absolute -left-[17px] top-0 h-9 w-9 rounded-full flex items-center justify-center border-4 border-gray-900 ${isFirst ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}>
         {statusIcons[event.status] || <PackageIcon/>}
     </div>
     <div>
-      <p className={`font-bold text-lg ${isFirst ? 'text-purple-400' : 'text-gray-300'}`}>{event.status}</p>
+      <p className={`font-bold text-lg ${isFirst ? 'text-blue-400' : 'text-gray-300'}`}>{event.status}</p>
       <p className="text-sm text-gray-400">{event.location}</p>
       <p className="text-xs text-gray-500 mb-1">{event.timestamp}</p>
       <p className="text-sm text-gray-300 bg-white/5 p-2 rounded-lg inline-block border border-white/5">{event.details}</p>
@@ -190,7 +190,7 @@ function PackageCheckIcon() { return <svg xmlns="http://www.w3.org/2000/svg" wid
 function ClipboardIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>; }
 function PackageIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v2"/><path d="M12 12 3.1 7.5"/><path d="M12 12 20.9 7.5"/><path d="M12 22V12"/><path d="M18.7 14.3 12 18l-6.7-3.7"/><path d="M3.1 16.5 12 22l8.9-5.5"/></svg>; }
 function CopyIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>; }
-function CheckIconSmall() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-400"><polyline points="20 6 9 17 4 12"></polyline></svg>; }
+function CheckIconSmall() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><polyline points="20 6 9 17 4 12"></polyline></svg>; }
 function ClockIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>; }
 function ScaleIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>; }
 function BoxIcon() { return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>; }
