@@ -6,8 +6,8 @@ export default function Header() {
     <header>
         <div className="header-content">
             <div className="logo-text">
-                <h1>Zahid Cargo</h1>
-                <p>Global Shipping Excellence</p>
+                <h1>Orchid Malaysia</h1>
+                <p>Premium Global Logistics</p>
             </div>
         </div>
     </header>

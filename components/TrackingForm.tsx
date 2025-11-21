@@ -28,20 +28,20 @@ export default function TrackingForm({ onTrack, isLoading, error, onClearError }
         return;
     }
 
-    if (!trimmedInput.startsWith('ZC')) {
-        setLocalError("Invalid format. Tracking number must start with 'ZC'.");
+    if (!trimmedInput.startsWith('OM')) {
+        setLocalError("Invalid format. Tracking number must start with 'OM'.");
         return;
     }
 
     const numberPart = trimmedInput.slice(2);
 
     if (!/^\d+$/.test(numberPart)) {
-         setLocalError("Invalid format. Tracking number must contain only numbers after 'ZC'.");
+         setLocalError("Invalid format. Tracking number must contain only numbers after 'OM'.");
          return;
     }
 
     if (numberPart.length !== 9) {
-        setLocalError(`Invalid length. Expected 9 digits after 'ZC', but found ${numberPart.length}.`);
+        setLocalError(`Invalid length. Expected 9 digits after 'OM', but found ${numberPart.length}.`);
         return;
     }
 
@@ -57,7 +57,7 @@ export default function TrackingForm({ onTrack, isLoading, error, onClearError }
               type="text" 
               id="trackingInput"
               className={`search-input ${displayError ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500' : ''}`}
-              placeholder="e.g., ZC123456789"
+              placeholder="e.g., OM123456789"
               aria-label="Package Tracking ID"
               aria-invalid={!!displayError}
               aria-describedby={displayError ? "tracking-error" : undefined}

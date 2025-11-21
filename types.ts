@@ -13,6 +13,11 @@ export interface TrackingData {
   origin: string;
   destination: string;
   history: TrackingEvent[];
+  // New optional fields for shipment details
+  weight?: string;
+  dimensions?: string;
+  pieceCount?: number;
+  shipmentType?: string;
 }
 
 export interface ChatMessage {
