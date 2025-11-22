@@ -319,7 +319,7 @@ export default function App() {
                     <div className="process-card">
                         <div className="process-number">3</div>
                         <div className="process-image-container">
-                            <img src="https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=80&w=2000&auto=format&fit=crop" alt="Door-to-Door Delivery" className="process-image" />
+                            <img src="https://images.unsplash.com/photo-1616432043562-3671ea2e5242?q=80&w=1888&auto=format&fit=crop" alt="Door-to-Door Delivery" className="process-image" />
                         </div>
                         <h3>Door-to-Door Delivery</h3>
                         <p>Our professional couriers ensure safe delivery right to your doorstep with a smile</p>
