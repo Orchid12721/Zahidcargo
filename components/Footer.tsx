@@ -30,7 +30,7 @@ export default function Footer({ onLogin }: FooterProps) {
 
   return (
     <>
-      <footer>
+      <footer className="relative">
           <div className="footer-content">
               <div className="footer-brand">
                   <h2>Orchid Malaysia</h2>
@@ -39,17 +39,18 @@ export default function Footer({ onLogin }: FooterProps) {
                   © {new Date().getFullYear()} Orchid Malaysia. Premium global shipping services for your precious parcels.
               </p>
           </div>
-      </footer>
 
-      {/* Discreet Admin Access Button (Fixed Bottom Left) */}
-      <button 
-          onClick={() => setShowLoginModal(true)}
-          className="fixed bottom-4 left-4 z-40 p-2 text-blue-900/30 hover:text-blue-500 transition-colors duration-300 active:scale-95"
-          title="Admin Access"
-          aria-label="Admin Login"
-      >
-          <LockIcon />
-      </button>
+          {/* Discreet Admin Access Button (Absolute Bottom Left of Footer) */}
+          {/* Positioned absolutely within the relative footer, so it stays at the bottom of the page */}
+          <button 
+              onClick={() => setShowLoginModal(true)}
+              className="absolute bottom-4 left-4 z-10 p-3 text-white/10 hover:text-blue-400 hover:bg-white/5 rounded-full transition-all duration-300 active:scale-95 cursor-pointer"
+              title="Admin Access"
+              aria-label="Admin Login"
+          >
+              <LockIcon />
+          </button>
+      </footer>
 
       {/* Login Modal */}
       {showLoginModal && (

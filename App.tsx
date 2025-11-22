@@ -157,8 +157,6 @@ export default function App() {
   };
 
   const handleUpdateShipment = async (trackingNumber: string, event: TrackingEvent) => {
-    // Optimistically update local state is handled by Realtime, but we need to fetch current first to append history
-    // or we can just use the 'shipments' state we already have.
     const currentShipment = shipments[trackingNumber];
     if (!currentShipment) return;
 
@@ -178,11 +176,27 @@ export default function App() {
         alert('Error updating shipment: ' + error.message);
         return;
       }
-      // Realtime subscription will handle the UI update
-      
     } catch (err) {
       console.error('Error updating shipment:', err);
       alert('Failed to update shipment.');
+    }
+  };
+
+  // NEW: Function to edit core details (Origin, Destination, etc.) without adding history
+  const handleEditShipmentDetails = async (updatedData: TrackingData) => {
+    try {
+      const { error } = await supabase
+        .from('shipments')
+        .update({ data: updatedData })
+        .eq('tracking_number', updatedData.trackingNumber);
+
+      if (error) {
+        alert('Error editing shipment: ' + error.message);
+        return;
+      }
+    } catch (err) {
+      console.error('Error editing shipment:', err);
+      alert('Failed to edit shipment.');
     }
   };
 
@@ -195,8 +209,6 @@ export default function App() {
 
       if (error) {
         alert('Error deleting shipment: ' + error.message);
-      } else {
-        // Success is handled via realtime subscription
       }
     } catch (err) {
       console.error('Error deleting shipment:', err);
@@ -213,6 +225,7 @@ export default function App() {
             shipments={shipments}
             onCreateShipment={handleCreateShipment}
             onUpdateShipment={handleUpdateShipment}
+            onEditShipment={handleEditShipmentDetails}
             onDeleteShipment={handleDeleteShipment}
             onLogout={() => setIsAdminLoggedIn(false)}
           />
